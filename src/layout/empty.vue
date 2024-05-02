@@ -1,7 +1,5 @@
 <template >
-    <div class="text-6xl text-blue-400">
-        Hello World
-    </div>
+    <router-view></router-view>
 </template>
 <script>
 export default {
