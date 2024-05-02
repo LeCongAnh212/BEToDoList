@@ -4,6 +4,15 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/",
+      name: "all-task",
+      meta: { layout: "default" },
+      components: {
+        default: () => import("@/views/home/menu.vue"),
+        content: () => import("@/views/all-task/all-task.vue"),
+      },
+    },
+    {
       path: "/login",
       name: "login",
       meta: { layout: "empty" },
