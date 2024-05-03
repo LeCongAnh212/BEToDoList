@@ -35,22 +35,22 @@
         </div>
         <div v-if="isAdd">
             <strong class="text-3xl ">Subtasks</strong>
-            <textarea id="message" rows="4" class="block mt-5 p-2.5 w-full text-sm bg-transparent 
-            rounded-lg border border-gray-300 focus:ring-blue-300 focus:border-blue-500
-            placeholder-gray-400 focus:outline-none" placeholder="Subtask ..." />
+            <input v-model="subtask" @keyup.enter="addSubtask()" type="text" class="w-full border border-gray-300 p-2 bg-transparent
+                    rounded-md focus:outline-none focus:border-blue-300 mt-3" placeholder="subtask">
         </div>
 
         <footer class="absolute bottom-10 flex w-full gap-5">
             <button @click="deleteTask()" class="flex-1 border-2 p-3 rounded-lg hover:bg-red-600 hover:text-white">
                 Delete Task
             </button>
-            <button class="flex-1 border-2 p-3 
-            rounded-lg hover:bg-blue-600 bg-blue-500 text-white">
+            <button @click="updateTask()" class="flex-1 border-2 p-3 
+                rounded-lg hover:bg-blue-600 bg-blue-500 text-white">
                 Save changes
             </button>
         </footer>
     </div>
 
+    <!-- Modal -->
     <div id="modelDeleteSubtask" class="hidden absolute bg-gray-400 rounded-lg flex-col items-center
     top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-fit p-2 px-5">
         <i @click="hiddenModalDeleteSubtask()" class="fas fa-times absolute right-5 cursor-pointer"></i>
@@ -82,6 +82,7 @@ export default {
             deadline: '',
             idDeleteSubtask: [],
             subtasks: [],
+            subtask: '',
             deleteSubtask: {},
         }
     },
@@ -124,7 +125,28 @@ export default {
             this.subtasks.splice(this.deleteSubtask.index, 1)
             this.idDeleteSubtask.push(this.deleteSubtask.value.id)
             this.hiddenModalDeleteSubtask()
-        }
+        },
+        addSubtask() {
+            this.subtasks.push({ title: this.subtask })
+            this.subtask = ''
+        },
+        updateTask() {
+            axios
+                .post('tasks/update', {
+                    ...this.task,
+                    'deadline': this.deadline,
+                    idDeleteSubtask: this.idDeleteSubtask
+                })
+                .then((res) => {
+                    this.$emit('updateTask', res.data.task)
+                    CoreFunction.displayNotification(res.data.message, 200)
+                })
+                .catch((res) => {
+                    for (const [key, value] of Object.entries(res.response.data.errors)) {
+                        CoreFunction.displayNotification(value)
+                    }
+                });
+        },
     },
 }
 </script>

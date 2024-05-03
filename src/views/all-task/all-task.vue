@@ -21,7 +21,7 @@
         </div>
         <div v-if="currentTask" class="flex-1 bg-gray-100 h-full p-4 rounded-xl">
             <detail-task-component v-if="!viewCreate" :currentTask="currentTask" :typeTasks="typeTasks"
-                @deleteTask="handleDeleteTask" />
+                @deleteTask="handleDeleteTask" @updateTask="handleUpdateTask" />
             <create-task v-else :typeTasks="typeTasks" @addTaskToParent="handleCreatedTask" />
         </div>
     </div>
@@ -33,6 +33,7 @@ import DetailTaskComponent from '../detail-task.vue'
 import TaskComponent from '../task.vue'
 import CreateTask from '../create-task/create-task.vue'
 import axios from '../../core/BaseRequest.js'
+import { proxyRefs } from 'vue'
 
 export default {
     components: {
@@ -77,6 +78,11 @@ export default {
         },
         handleDeleteTask(task) {
             this.listTask = this.listTask.filter(t => t.id != task.id)
+        },
+        handleUpdateTask(task) {
+            this.getTask()
+            // const a = this.listTask.map(t => t.id == task.id ? task : t) 
+            // this.listTask = a
         }
     },
 }
