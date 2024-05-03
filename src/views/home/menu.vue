@@ -30,7 +30,7 @@
                         <i class="fas fa-clipboard-check me-2 "></i>
                     </div>
                     <p class="flex-1 ps-3">Finished</p>
-                    <p>12</p>
+                    <p>{{ listTaskFinished.length }}</p>
                 </li>
                 <li class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
                     <div class="w-4">
@@ -70,21 +70,33 @@ export default {
     data() {
         return {
             typeTask: [],
-            listAllTask : []
+            listAllTask: [],
+            listTaskFinished: []
         }
     },
     mounted() {
         this.emitter.on('transmitTypeTask', (types) => {
             this.typeTask = types
         })
+        this.getTaskFinished()
     },
     watch: {
-        '$store.state.listTask': function () {
-            this.listAllTask = this.$store.state.listTask
+        '$store.state.listAllTask': function () {
+            this.listAllTask = this.$store.state.listAllTask
+            console.log('this.listAllTask: ', this.listAllTask);
         }
     },
     methods: {
+        getTaskFinished() {
+            axios
+                .get('tasks/data-finished')
+                .then((res) => {
+                    this.listTaskFinished = res.data.tasks
+                    this.$store.commit('setListTaskFinished', res.data.tasks)
+                    console.log('this.$store.state.listTask: ', this.$store.state.listTask);
 
+                });
+        }
     },
 }
 </script>

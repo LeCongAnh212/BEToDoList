@@ -3,13 +3,17 @@ import { createStore } from "vuex";
 const store = createStore({
   state() {
     return {
-      listTask: [],
+      listAllTask: [],
+      listTaskFinished: [],
     };
   },
   mutations: {
     setListTask(state, tasks) {
-      state.listTask = tasks;
+      state.listAllTask = tasks;
     },
+    setListTaskFinished(state, tasks) {
+      state.listTaskFinished = tasks;
+    }
   },
 });
 
