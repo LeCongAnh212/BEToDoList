@@ -135,7 +135,8 @@ export default {
                 .post('tasks/update', {
                     ...this.task,
                     'deadline': this.deadline,
-                    idDeleteSubtask: this.idDeleteSubtask
+                    idDeleteSubtask: this.idDeleteSubtask,
+                    subtasks: this.subtasks,
                 })
                 .then((res) => {
                     this.$emit('updateTask', res.data.task)
