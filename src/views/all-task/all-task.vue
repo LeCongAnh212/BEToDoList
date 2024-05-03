@@ -59,6 +59,7 @@ export default {
                 .get('tasks/data')
                 .then(res => {
                     this.listTask = res.data.tasks
+                    this.$store.commit('setListTask', res.data.tasks)
                 })
         },
         getTypeTask() {

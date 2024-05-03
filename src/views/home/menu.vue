@@ -16,7 +16,7 @@
                         <i class="fas fa-border-all me-2 "></i>
                     </div>
                     <p class="flex-1 ps-3">All</p>
-                    <p>12</p>
+                    <p>{{ listAllTask.length }}</p>
                 </li>
                 <li class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
                     <div class="w-4">
@@ -64,11 +64,13 @@
     </div>
 </template>
 <script>
-
+import coreFunction from '@/core/CoreFunction.js'
+import axios from '@/core/BaseRequest'
 export default {
     data() {
         return {
-            typeTask: []
+            typeTask: [],
+            listAllTask : []
         }
     },
     mounted() {
@@ -76,8 +78,13 @@ export default {
             this.typeTask = types
         })
     },
+    watch: {
+        '$store.state.listTask': function () {
+            this.listAllTask = this.$store.state.listTask
+        }
+    },
     methods: {
-        //
+
     },
 }
 </script>
