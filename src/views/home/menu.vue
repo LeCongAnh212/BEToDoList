@@ -47,9 +47,9 @@
             <ul>
                 <li v-for="(value, index) in typeTask"
                     class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
-                    <div class="w-4 ">
-                        <i class="fas fa-border-all me-2  "></i>
-                    </div>
+                    <span class="w-5 aspect-square text-center me-2" :class="value.id == 1 ? 'bg-red-500'
+                        : value.id == 2 ? 'bg-green-500' : 'bg-blue-500'">
+                    </span>
                     <p class="flex-1 ps-3">{{ value.name }}</p>
                     <p>12</p>
                 </li>
@@ -58,7 +58,6 @@
                         <i class="fas fa-plus me-2"></i>
                     </div>
                     <p class="flex-1 ps-3">Add New type</p>
-                    <p>12</p>
                 </li>
             </ul>
         </div>
@@ -75,7 +74,6 @@ export default {
     mounted() {
         this.emitter.on('transmitTypeTask', (types) => {
             this.typeTask = types
-            console.log('this.typeTask: ', this.typeTask);
         })
     },
     methods: {

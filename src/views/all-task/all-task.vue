@@ -9,7 +9,8 @@
             </div>
             <div class="relative font-medium text-gray-500 mt-10 mb-2">
                 <i class="fas fa-plus absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer"></i>
-                <button class="border-[1px] border-blue-300 rounded-xl w-full p-3 text-start ps-10">Add New
+                <button @click="viewCreate = !viewCreate"
+                    class="border-[1px] border-blue-300 rounded-xl w-full p-3 text-start ps-10">Add New
                     Task</button>
             </div>
             <div>
@@ -19,7 +20,9 @@
             </div>
         </div>
         <div v-if="currentTask" class="flex-1 bg-gray-100 h-full p-4 rounded-xl">
-            <detail-task-component :currentTask="currentTask" :typeTasks="typeTasks" />
+            <detail-task-component v-if="!viewCreate" :currentTask="currentTask" :typeTasks="typeTasks"
+                @deleteTask="handleDeleteTask" />
+            <create-task v-else :typeTasks="typeTasks" @addTaskToParent="handleCreatedTask" />
         </div>
     </div>
 
@@ -28,18 +31,21 @@
 
 import DetailTaskComponent from '../detail-task.vue'
 import TaskComponent from '../task.vue'
+import CreateTask from '../create-task/create-task.vue'
 import axios from '../../core/BaseRequest.js'
 
 export default {
     components: {
         DetailTaskComponent,
-        TaskComponent
+        TaskComponent,
+        CreateTask,
     },
     data() {
         return {
             listTask: null,
             currentTask: {},
-            typeTasks: null
+            typeTasks: null,
+            viewCreate: false,
         }
     },
     created() {
@@ -64,7 +70,13 @@ export default {
         },
         handleReceiveTask(task) {
             this.currentTask = task
-            console.log('this.currentTask: ', this.currentTask);
+        },
+        handleCreatedTask(task) {
+            this.listTask.unshift(task)
+            this.viewCreate = false
+        },
+        handleDeleteTask(task) {
+            this.listTask = this.listTask.filter(t => t.id != task.id)
         }
     },
 }
