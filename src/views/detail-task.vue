@@ -12,7 +12,7 @@
             <div class="w-24">Type:</div>
             <select v-model="task.type_id" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg font-semibold
                 focus:ring-blue-500 focus:border-blue-300 block w-fit p-2.5 focus:outline-none px-2">
-                <option v-for="value in typeTasks" :value="value.id">{{ value.name }}</option>
+                <option v-for="value in getListTypeTask" :value="value.id">{{ value.name }}</option>
             </select>
         </div>
 
@@ -67,12 +67,9 @@
 
 import CoreFunction from '@/core/CoreFunction';
 import axios from '@/core/BaseRequest'
+import { mapGetters } from 'vuex';
 
 export default {
-    props: {
-        currentTask: Object,
-        typeTasks: Array
-    },
     data() {
         return {
             isAdd: false,
@@ -87,28 +84,27 @@ export default {
         }
     },
     watch: {
-        currentTask(newV, OldV) {
+        getCurrentTask(newV, OldV) {
             this.task = Object.assign({}, newV)
             this.deadline = this.reverseDate(this.task.deadline)
             this.subtasks = [...this.task.subtasks]
             this.idDeleteSubtask = []
         }
     },
-    mounted() {
-
+    computed: {
+        ...mapGetters([
+            'getCurrentTask',
+            'getListTypeTask',
+        ]),
     },
     methods: {
         reverseDate(date) {
             return CoreFunction.reverseDate(date)
         },
         deleteTask() {
-            axios
-                .post('tasks/delete', this.task)
-                .then((res) => {
-                    if (res.data.status == 200) {
-                        this.$emit('deleteTask', this.task)
-                        this.task = {}
-                    }
+            this.$store.dispatch('deleteTask', this.task)
+                .then(() => {
+                    this.task = {}
                 })
         },
         showModalDeleteSubtask(value, index) {
@@ -131,22 +127,13 @@ export default {
             this.subtask = ''
         },
         updateTask() {
-            axios
-                .post('tasks/update', {
-                    ...this.task,
-                    'deadline': this.deadline,
-                    idDeleteSubtask: this.idDeleteSubtask,
-                    subtasks: this.subtasks,
-                })
-                .then((res) => {
-                    this.$emit('updateTask', res.data.task)
-                    CoreFunction.displayNotification(res.data.message, 200)
-                })
-                .catch((res) => {
-                    for (const [key, value] of Object.entries(res.response.data.errors)) {
-                        CoreFunction.displayNotification(value)
-                    }
-                });
+            const payload = {
+                ...this.task,
+                'deadline': this.deadline,
+                idDeleteSubtask: this.idDeleteSubtask,
+                subtasks: this.subtasks,
+            }
+            this.$store.dispatch('updateTask', payload)
         },
     },
 }

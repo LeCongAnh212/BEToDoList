@@ -6,7 +6,7 @@ import router from './router'
 import Default from './layout/masterpage.vue' 
 import Empty from './layout/empty.vue'
 
-import store from './vuex'
+import store from './store'
 import mitt from "mitt";
 
 const app = createApp(App)

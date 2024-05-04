@@ -16,7 +16,7 @@
                         <i class="fas fa-border-all me-2 "></i>
                     </div>
                     <p class="flex-1 ps-3">All</p>
-                    <p>{{ listAllTask.length }}</p>
+                    <p>{{ getListAllTask.length }}</p>
                 </li>
                 <li class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
                     <div class="w-4">
@@ -30,14 +30,14 @@
                         <i class="fas fa-clipboard-check me-2 "></i>
                     </div>
                     <p class="flex-1 ps-3">Finished</p>
-                    <p>{{ listTaskFinished.length }}</p>
+                    <p>{{ getListTaskFinished.length }}</p>
                 </li>
                 <li class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
                     <div class="w-4">
                         <i class="fas fa-undo-alt me-2 "></i>
                     </div>
                     <p class="flex-1 ps-3">Unfinished</p>
-                    <p>12</p>
+                    <p>{{ getListTaskUnFinished.length }}</p>
                 </li>
             </ul>
         </div>
@@ -45,7 +45,7 @@
         <div class="font-medium">
             <p class="font-semibold text-xl mb-2">Types</p>
             <ul>
-                <li v-for="(value, index) in typeTask"
+                <li v-for="(value, index) in getListTypeTask"
                     class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
                     <span class="w-5 aspect-square text-center me-2" :class="value.id == 1 ? 'bg-red-500'
                         : value.id == 2 ? 'bg-green-500' : 'bg-blue-500'">
@@ -64,39 +64,35 @@
     </div>
 </template>
 <script>
+
 import coreFunction from '@/core/CoreFunction.js'
-import axios from '@/core/BaseRequest'
+import { mapGetters } from "vuex";
+
 export default {
     data() {
         return {
-            typeTask: [],
-            listAllTask: [],
-            listTaskFinished: []
+            //
         }
     },
     mounted() {
-        this.emitter.on('transmitTypeTask', (types) => {
-            this.typeTask = types
-        })
-        this.getTaskFinished()
+        
     },
-    watch: {
-        '$store.state.listAllTask': function () {
-            this.listAllTask = this.$store.state.listAllTask
-            console.log('this.listAllTask: ', this.listAllTask);
-        }
+    computed: {
+        ...mapGetters([
+            "getListTaskFinished",
+            "getListTaskUnFinished",
+            "getListAllTask",
+            "getListTypeTask",
+        ]),
+    },
+    async created() {
+        this.$store.dispatch("fetchFinishedTasks");
+        this.$store.dispatch('fetchUnFinishedTasks');
+        this.$store.dispatch('fetchAllTasks')
+        this.$store.dispatch('fetchListTypeTasks')
     },
     methods: {
-        getTaskFinished() {
-            axios
-                .get('tasks/data-finished')
-                .then((res) => {
-                    this.listTaskFinished = res.data.tasks
-                    this.$store.commit('setListTaskFinished', res.data.tasks)
-                    console.log('this.$store.state.listTask: ', this.$store.state.listTask);
 
-                });
-        }
     },
 }
 </script>

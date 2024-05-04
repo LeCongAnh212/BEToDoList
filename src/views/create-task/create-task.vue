@@ -12,7 +12,7 @@
             <div class="w-24">Type:</div>
             <select v-model="task.type_id" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg font-semibold
                 focus:ring-blue-500 focus:border-blue-300 block w-fit p-2.5 focus:outline-none px-2">
-                <option v-for="value in typeTasks" :value="value.id">{{ value.name }}</option>
+                <option v-for="value in getListTypeTask" :value="value.id">{{ value.name }}</option>
             </select>
         </div>
 
@@ -39,19 +39,18 @@
         </div>
 
         <footer class="absolute bottom-10 flex w-full gap-5">
-            <button @click="createTask()" class="flex-1 border-2 p-3 rounded-lg hover:bg-blue-600 bg-blue-500 text-white">
+            <button @click="createTask()"
+                class="flex-1 border-2 p-3 rounded-lg hover:bg-blue-600 bg-blue-500 text-white">
                 Create Task
             </button>
         </footer>
     </div>
 </template>
 <script>
-import CoreFunction from '@/core/CoreFunction';
-import axios from '@/core/BaseRequest';
+
+import { mapGetters } from 'vuex';
+
 export default {
-    props: {
-        typeTasks: Array
-    },
     data() {
         return {
             isAdd: true,
@@ -62,6 +61,9 @@ export default {
             subtask: '',
         }
     },
+    computed: {
+        ...mapGetters(['getListTypeTask'])
+    },
     mounted() {
         //
     },
@@ -71,15 +73,9 @@ export default {
             this.subtask = ''
         },
         createTask() {
-            axios
-                .post('tasks/create', this.task)
-                .then((res) => {
-                    this.$emit('addTaskToParent', res.data.task)
-                })
-                .catch((res) => {
-                    for (const [key, value] of Object.entries(res.response.data.errors)) {
-                        CoreFunction.displayNotification(value)
-                    }
+            this.$store.dispatch('createTask', this.task)
+                .then(() => {
+                    this.$emit('changeView');
                 });
         }
     },
