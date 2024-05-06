@@ -10,11 +10,23 @@ export default {
 
     return result;
   },
-  displaySuccess(res) {
-    var message = res.data.message;
-    if (res.data.status == 1) {
+  reverseDate(date) {
+    function addLeadingZero(number) {
+      return number < 10 ? "0" + number : number;
+    }
+
+    var result = this.dateFormat(date);
+    var formattedResult = result
+      .split("-")
+      .map(addLeadingZero)
+      .reverse()
+      .join("-");
+    return formattedResult != "1970-01-01" ? formattedResult : "";
+  },
+  displayNotification(message, status = 400) {
+    if ([200, 201].includes(status)) {
       toastr.info(message);
-    } else if (res.data.status == 0) {
+    } else if (status == 400) {
       toastr.error(message);
     } else {
       toastr.warning(message);

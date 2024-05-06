@@ -1,10 +1,12 @@
 <template>
-    <div class="w-full h-full p-4 flex ">
+    <div class="w-full h-full p-4 flex">
         <div class="flex flex-col  w-[55%] p-4">
             <div class="flex">
-                <legend class="text-5xl font-bold me-10">All Task</legend>
+                <legend class="text-5xl font-bold me-10 capitalize ">{{ typeView }}</legend>
                 <div class="border-[1px] border-blue-300 rounded-xl w-14 h-14 flex justify-center items-center">
-                    <span v-if="getListAllTask" class="text-4xl font-semibold">{{ getListAllTask.length }}</span>
+                    <span v-if="listTask" class="text-4xl font-semibold">
+                        {{ listTask.length }}
+                    </span>
                 </div>
             </div>
             <div class="relative font-medium text-gray-500 mt-10 mb-2">
@@ -13,8 +15,9 @@
                     class="border-[1px] border-blue-300 rounded-xl w-full p-3 text-start ps-10">Add New
                     Task</button>
             </div>
-            <div class="overflow-y-auto">
-                <template v-for="task in getListAllTask" :key="task">
+            <div v-if="listTask" class="overflow-y-auto">
+                <template v-for="task in listTask" :key="task">
+                    {{ task.name }}
                     <task-component :task="task" @transmitTaskToParent="handleReceiveTask" />
                 </template>
             </div>
@@ -42,19 +45,35 @@ export default {
     data() {
         return {
             viewCreate: false,
+            typeView: this.$route.params.typeName,
+            listTask: null,
+        }
+    },
+    watch: {
+        '$route.params.typeName'(newV, onlV) {
+            this.typeView = newV
+            this.listTask = this.getListTypeTask.find(item => item.name == newV).tasks
+        },
+        getListTypeTask(newV, oldV) {
+            this.check = false
+            this.listTask = newV[0].tasks
         }
     },
     computed: {
         ...mapGetters([
-            'getListAllTask',
             'getListTypeTask',
         ]),
     },
-    created() {
+    mounted() {
+        if (this.getListTypeTask) {
+            this.listTask = this.getListTypeTask[0].tasks
+        }
 
     },
     methods: {
-
+        loadListTask() {
+            console.log('this.listTask: ', this.listTask);
+        }
     },
 }
 </script>
