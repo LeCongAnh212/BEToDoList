@@ -66,4 +66,20 @@ export default {
       }
     });
   },
+  async fetchTaskOutDate({ commit }) {
+    try {
+      const res = await axios.get("tasks/data-out-date");
+      commit("setListTaskOutDate", res.data.tasks);
+    } catch (error) {
+      console.error("Error fetching out date tasks:", error);
+    }
+  },
+  searchTask({ commit }, payload) {
+    axios.post("search", payload).then((res) => {
+      commit("setListAllTask", res.data.allTasks);
+      commit("setListTaskUnFinished", res.data.unfinishedTasks);
+      commit("setListTaskFinished", res.data.finishedTasks);
+      commit("setListTaskOutDate", res.data.outDateTasks);
+    });
+  },
 };

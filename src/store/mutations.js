@@ -14,6 +14,12 @@ export default {
   addTaskToBeginning(state, task) {
     state.listAllTask.unshift(task);
     state.listTaskUnFinished.unshift(task);
+    // if(task.type)
+    state.listTypeTask.forEach((element) => {
+      if (element.id == task.type_id) {
+        element.tasks.unshift(task);
+      }
+    });
   },
   deleteTaskById(state, id) {
     state.listAllTask = state.listAllTask.filter((task) => task.id != id);
@@ -38,5 +44,8 @@ export default {
   },
   setListTypeTask(state, typeTasks) {
     state.listTypeTask = typeTasks;
+  },
+  setListTaskOutDate(state, tasks) {
+    state.listTaskOutDate = tasks;
   },
 };

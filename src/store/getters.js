@@ -4,4 +4,5 @@ export default {
   getListTaskUnFinished: (state) => state.listTaskUnFinished,
   getCurrentTask: (state) => state.currentTask,
   getListTypeTask: (state) => state.listTypeTask,
+  getListTaskOutDate: (state) => state.listTaskOutDate,
 };

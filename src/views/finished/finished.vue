@@ -1,10 +1,12 @@
 <template>
-    <div class="w-full h-full p-4 flex ">
+    <div class="w-full h-full p-4 flex">
         <div class="flex flex-col  w-[55%] p-4">
             <div class="flex">
-                <legend class="text-5xl font-bold me-10">All Task</legend>
+                <legend class="text-5xl font-bold me-10">Finished</legend>
                 <div class="border-[1px] border-blue-300 rounded-xl w-14 h-14 flex justify-center items-center">
-                    <span v-if="getListAllTask" class="text-4xl font-semibold">{{ getListAllTask.length }}</span>
+                    <span v-if="getListTaskFinished" class="text-4xl font-semibold">
+                        {{ getListTaskFinished.length }}
+                    </span>
                 </div>
             </div>
             <div class="relative font-medium text-gray-500 mt-10 mb-2">
@@ -14,9 +16,9 @@
                     Task</button>
             </div>
             <div class="overflow-y-auto">
-                <template v-for="task in getListAllTask" :key="task">
-                    <task-component :task="task" @transmitTaskToParent="handleReceiveTask" />
-                </template>
+                <template v-for=" task in getListTaskFinished" :key="task">
+                <task-component :task="task" @transmitTaskToParent="handleReceiveTask" />
+</template>
             </div>
         </div>
         <div class="flex-1 bg-gray-100 h-full p-4 rounded-xl">
@@ -47,6 +49,7 @@ export default {
     computed: {
         ...mapGetters([
             'getListAllTask',
+            'getListTaskFinished',
             'getListTypeTask',
         ]),
     },

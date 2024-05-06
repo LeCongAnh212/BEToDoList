@@ -4,4 +4,5 @@ export default {
   listTaskFinished: [],
   listTaskUnFinished: [],
   listTypeTask: [],
+  listTaskOutDate: [],
 };
