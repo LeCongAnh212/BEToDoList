@@ -82,4 +82,26 @@ export default {
       commit("setListTaskOutDate", res.data.outDateTasks);
     });
   },
+  createType({ commit }, name) {
+    axios
+      .post("type-task/create", name)
+      .then((res) => {
+        console.log("resâ: ", res.data);
+        if (res.data.status == 400) {
+          CoreFunction.displayNotification(res.data.message, res.data.status);
+        } else {
+          commit("addTypeTask", res.data.type);
+        }
+
+        return true;
+      })
+      .catch((res) => {
+        CoreFunction.displayNotification(
+          res.response.data.message,
+          res.response.data.status
+        );
+
+        return false;
+      });
+  },
 };

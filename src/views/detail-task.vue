@@ -18,7 +18,7 @@
 
         <div class="flex items-center">
             <div class="w-24">Deadline:</div>
-            <input v-model="deadline" type="date" class="p-2 rounded-lg font-semibold
+            <input v-model="deadline" type="datetime-local" class="p-2 rounded-lg font-semibold
                 focus:ring-blue-500 focus:border-blue-300 block w-fit focus:outline-none">
         </div>
 
@@ -86,7 +86,7 @@ export default {
     watch: {
         getCurrentTask(newV, OldV) {
             this.task = Object.assign({}, newV)
-            this.deadline = this.reverseDate(this.task.deadline)
+            this.deadline = this.task.deadline
             this.subtasks = [...this.task.subtasks]
             this.idDeleteSubtask = []
         }

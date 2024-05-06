@@ -4,8 +4,8 @@
             Menu
         </p>
         <div class="relative">
-            <input @keyup="searchTask" v-model="keyword" type="text" placeholder="Search ... " class="w-full p-2 ps-10 border-2 border-gray-300 
-            rounded-md bg-transparent  ::placeholder:text-white">
+            <input @keyup="searchTask" v-model="keyword" type="text" placeholder="Search ... "
+                class="w-full p-2 ps-10 border-2 border-gray-300 rounded-md bg-transparent ::placeholder:text-white">
             <i class="fas fa-search absolute top-1/2 -translate-y-1/2 left-3 "></i>
         </div>
         <div class="font-medium capitalize">
@@ -48,7 +48,7 @@
 
         <div class="font-medium">
             <p class="font-semibold text-xl mb-2">Types</p>
-            <ul>
+            <ul class=" max-h-64 overflow-scroll">
                 <li @click="$router.push({ name: 'type-view', params: { typeName: value.name } })"
                     v-for="(value, index) in getListTypeTask"
                     class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
@@ -56,21 +56,23 @@
                         : value.id == 2 ? 'bg-green-500' : 'bg-blue-500'">
                     </span>
                     <p class="flex-1 ps-3">{{ value.name }}</p>
-                    <p>{{ value.tasks.length }}</p>
-                </li>
-                <li class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
-                    <div class="w-4">
-                        <i class="fas fa-plus me-2"></i>
-                    </div>
-                    <p class="flex-1 ps-3">Add New type</p>
+                    <p v-if="value.tasks">{{ value.tasks.length }}</p>
                 </li>
             </ul>
+            <li @click="toggleViewCreateType()"
+                class="flex justify-between items-center hover:bg-gray-200 hover:text-blue-300 cursor-pointer  p-2">
+                <div class="w-4">
+                    <i class="fas fa-plus me-2"></i>
+                </div>
+                <p class="flex-1 ps-3 select-none">Add New type</p>
+            </li>
+        </div>
+        <div v-show="viewCreateType">
+            <p class="font-semibold text-xl mb-2">Add type</p>
+            <input @keyup.enter="createType()" v-model="typeName" type="text" placeholder="Add type" class="w-full mt-2 p-2 border-2 
+            border-gray-300 rounded-md focus:">
         </div>
 
-        <div class="font-medium">
-            <p class="font-semibold text-xl mb-2">Filters</p>
-
-        </div>
 
         <div @click="logout()" class="absolute bottom-10 bg-blue-300 w-10 h-10 flex justify-center 
             items-center rounded-full cursor-pointer shadow-md">
@@ -90,6 +92,8 @@ export default {
     data() {
         return {
             keyword: '',
+            typeName: '',
+            viewCreateType: false,
         }
     },
     mounted() {
@@ -127,10 +131,19 @@ export default {
         searchTask: _.debounce(function () {
             let payload = {
                 keyword: this.keyword,
-                routerName: this.$route.name
             };
             this.$store.dispatch("searchTask", payload);
         }, 400),
+        toggleViewCreateType() {
+            this.viewCreateType = !this.viewCreateType
+        },
+        createType() {
+            if (this.typeName == '') return
+            const check = this.$store.dispatch('createType', { name: this.typeName })
+            if (check) {
+                this.typeName = ''
+            }
+        }
     },
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div  class="w-full h-full p-4 flex">
+    <div class="w-full h-full p-4 flex">
         <div class="flex flex-col  w-[55%] p-4">
             <div class="flex">
                 <legend class="text-5xl font-bold me-10 capitalize ">{{ typeView }}</legend>
@@ -15,7 +15,7 @@
                     class="border-[1px] border-blue-300 rounded-xl w-full p-3 text-start ps-10">Add New
                     Task</button>
             </div>
-            <div v-if="listTask.length > 0" class="overflow-y-auto">
+            <div v-if="listTask" class="overflow-y-auto">
                 <template v-for="task in listTask" :key="task">
                     {{ task.name }}
                     <task-component :task="task" @transmitTaskToParent="handleReceiveTask" />
@@ -46,27 +46,29 @@ export default {
         return {
             viewCreate: false,
             typeView: this.$route.params.typeName,
-            listTask: [],
+            listTask: null,
         }
     },
     watch: {
-        '$route.params.typeName' (newV, onlV){
+        '$route.params.typeName'(newV, onlV) {
             this.typeView = newV
             this.listTask = this.getListTypeTask.find(item => item.name == newV).tasks
-
         },
         getListTypeTask(newV, oldV) {
-            this.listTask = newV
-            console.log('this.listTask: ', this.listTask);
+            this.check = false
+            this.listTask = newV[0].tasks
         }
     },
     computed: {
         ...mapGetters([
-            'getListTaskUnFinished',
             'getListTypeTask',
         ]),
     },
-    created() {
+    mounted() {
+        if (this.getListTypeTask) {
+            this.listTask = this.getListTypeTask[0].tasks
+        }
+
     },
     methods: {
         loadListTask() {

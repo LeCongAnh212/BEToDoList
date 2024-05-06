@@ -48,4 +48,7 @@ export default {
   setListTaskOutDate(state, tasks) {
     state.listTaskOutDate = tasks;
   },
+  addTypeTask(state, typeTask) {
+    state.listTypeTask.push(typeTask);
+  },
 };
